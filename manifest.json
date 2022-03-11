@@ -1,0 +1,10 @@
+﻿{
+	"name": "ThatWasMine",
+	"version_number": "1.0.0",
+	"website_url": "https://github.com/william-hollywood/ThatWasMine",
+	"description": "ThatWasMine prompts in chat whenever an item drops with the artifact of sacrifice",
+	"dependencies": [
+		"bbepis-BepInExPack-5.4.9",
+		"RiskofThunder-HookGenPatcher-1.2.1"
+	]
+}
