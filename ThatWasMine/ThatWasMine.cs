@@ -13,7 +13,7 @@ namespace ThatWasMine
 	{
         public const string PluginGUID = PluginAuthor + "." + PluginName;
         public const string PluginAuthor = "WDH";
-        public const string PluginName = "ThatWasMyKill";
+        public const string PluginName = "ThatWasMine";
         public const string PluginVersion = "1.0.0";
 
         private static readonly Xoroshiro128Plus treasureRng = new Xoroshiro128Plus(0UL);
