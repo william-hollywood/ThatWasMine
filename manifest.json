@@ -1,6 +1,6 @@
 ﻿{
 	"name": "ThatWasMine",
-	"version_number": "1.0.0",
+	"version_number": "1.0.1",
 	"website_url": "https://github.com/william-hollywood/ThatWasMine",
 	"description": "ThatWasMine prompts in chat whenever an item drops with the artifact of sacrifice",
 	"dependencies": [
