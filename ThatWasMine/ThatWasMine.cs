@@ -15,7 +15,7 @@ namespace ThatWasMine
         public const string PluginGUID = PluginAuthor + "." + PluginName;
         public const string PluginAuthor = "WDH";
         public const string PluginName = "ThatWasMine";
-        public const string PluginVersion = "1.1.0";
+        public const string PluginVersion = "1.1.1";
 
         //The Awake() method is run at the very start when the game is initialized, where i add my own hook
         public void Awake()
@@ -49,7 +49,7 @@ namespace ThatWasMine
         private void CreateMessage(DamageReport damageReport, PickupIndex pickupIndex)
         {
             // Dont send a message if you're the only one playing
-            if (NetworkUser.readOnlyInstancesList.Count != 1)
+            if (NetworkUser.readOnlyInstancesList.Count == 1)
                 return;
             // TODO (WDH): use the networking api to send something to the player who killed the monster and send a local chat message so that localized steam nicknames of the client can be used
             // Currently does all names on the server side

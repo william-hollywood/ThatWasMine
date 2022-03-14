@@ -10,6 +10,10 @@ ThatWasMine prompts in the chat when an item drops with the Artifact of Sacrific
 
 ## Changelog
 
+**1.1.1**
+
+* Accidentally only made it work in single player, fixed now
+
 **1.1.0**
 
 * Changed how the mod functions, now injects IL code. So that I dont need to copy and paste the source code if it ever changes
