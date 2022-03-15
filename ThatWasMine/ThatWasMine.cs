@@ -1,9 +1,11 @@
 using BepInEx;
+using BepInEx.Configuration;
 using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using R2API;
 using R2API.Utils;
 using RoR2;
+using System.Linq;
 
 namespace ThatWasMine
 {
@@ -15,11 +17,22 @@ namespace ThatWasMine
         public const string PluginGUID = PluginAuthor + "." + PluginName;
         public const string PluginAuthor = "WDH";
         public const string PluginName = "ThatWasMine";
-        public const string PluginVersion = "1.1.1";
+        public const string PluginVersion = "1.1.2";
+
+        public const bool DEBUG = false;
+
+        public static ConfigEntry<bool> PromptOnPlayerOnly { get; set; }
 
         //The Awake() method is run at the very start when the game is initialized, where i add my own hook
         public void Awake()
         {
+            PromptOnPlayerOnly = Config.Bind(
+                "Message Configuration",
+                "PromptOnPlayerOnly",
+                true,
+                "Prompt item drops only on player kills"
+                );
+
             IL.RoR2.Artifacts.SacrificeArtifactManager.OnServerCharacterDeath += (il) =>
             {
                 ILCursor c = new(il);
@@ -49,13 +62,22 @@ namespace ThatWasMine
         private void CreateMessage(DamageReport damageReport, PickupIndex pickupIndex)
         {
             // Dont send a message if you're the only one playing
-            if (NetworkUser.readOnlyInstancesList.Count == 1)
+            if (NetworkUser.readOnlyInstancesList.Count == 1 && !DEBUG)
                 return;
+
+            // Get the owner of the damaging entity (if any)
+            CharacterBody attackerBody = damageReport.attackerOwnerMaster ? damageReport.attackerOwnerMaster.GetBody() : damageReport.attackerBody;
+            
+            // check the config for player only prompts and if it wasnt a player, dont continue.
+            if (PromptOnPlayerOnly.Value && !NetworkUser.readOnlyInstancesList.Select(u => u.userName).Contains(attackerBody.GetUserName()))
+                return;
+
+            PickupDef pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
+
             // TODO (WDH): use the networking api to send something to the player who killed the monster and send a local chat message so that localized steam nicknames of the client can be used
             // Currently does all names on the server side
-            PickupDef pickupDef = PickupCatalog.GetPickupDef(pickupIndex);
-            CharacterBody attackerBody = damageReport.attackerOwnerMaster ? damageReport.attackerOwnerMaster.GetBody() : damageReport.attackerBody;
             string msg = $"{attackerBody.GetUserName()} <style=cEvent>got dropped</style> {Util.GenerateColoredString(Language.GetString(pickupDef.nameToken), pickupDef.baseColor)}</color>";
+
             Chat.SendBroadcastChat(new Chat.SimpleChatMessage
             {
                 baseToken = "{0}",
