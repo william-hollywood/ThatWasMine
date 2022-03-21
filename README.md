@@ -10,6 +10,10 @@ ThatWasMine prompts in the chat when an item drops with the Artifact of Sacrific
 
 ## Changelog
 
+**1.1.3**
+
+* Misc debug changes behind the scenes, `Debug` is now config toggleable, default: false
+
 **1.1.2**
 
 * Added config to enable/disable messages from drops caused by non player damage. Called `PromptOnPlayerOnly`, default: true
