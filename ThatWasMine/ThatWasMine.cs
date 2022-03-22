@@ -17,11 +17,13 @@ namespace ThatWasMine
         public const string PluginGUID = PluginAuthor + "." + PluginName;
         public const string PluginAuthor = "WDH";
         public const string PluginName = "ThatWasMine";
-        public const string PluginVersion = "1.1.3";
+        public const string PluginVersion = "1.1.4";
 
         public static bool DEBUG => Debug.Value;
         private static ConfigEntry<bool> Debug { get; set; }
         public static ConfigEntry<bool> PromptOnPlayerOnly { get; set; }
+
+        private static bool CommandArtifactOn => RunArtifactManager.instance.IsArtifactEnabled(RoR2Content.Artifacts.commandArtifactDef);
 
         //The Awake() method is run at the very start when the game is initialized, where i add my own hook
         public void Awake()
@@ -74,7 +76,7 @@ namespace ThatWasMine
 
             // Get the owner of the damaging entity (if any)
             CharacterBody attackerBody = damageReport.attackerOwnerMaster ? damageReport.attackerOwnerMaster.GetBody() : damageReport.attackerBody;
-            
+
             // check the config for player only prompts and if it wasnt a player, dont continue.
             if (!DEBUG && PromptOnPlayerOnly.Value && !NetworkUser.readOnlyInstancesList.Select(u => u.userName).Contains(attackerBody.GetUserName()))
                 return;
@@ -83,13 +85,21 @@ namespace ThatWasMine
 
             // TODO (WDH): use the networking api to send something to the player who killed the monster and send a local chat message so that localized steam nicknames of the client can be used
             // Currently does all names on the server side
-            string msg = $"{attackerBody.GetUserName()} <style=cEvent>got dropped</style> {Util.GenerateColoredString(Language.GetString(pickupDef.nameToken), pickupDef.baseColor)}</color>";
+            string msg = $"{attackerBody.GetUserName()} <style=cEvent>got dropped</style> {GetDropName(pickupDef)}</color>";
 
             Chat.SendBroadcastChat(new Chat.SimpleChatMessage
             {
                 baseToken = "{0}",
                 paramTokens = new[] { msg }
             });
+        }
+
+        private static string GetDropName(PickupDef pickupDef)
+        {
+            if (CommandArtifactOn)
+                return Util.GenerateColoredString($"Command Essense", pickupDef.baseColor);
+            else
+                return Util.GenerateColoredString(Language.GetString(pickupDef.nameToken), pickupDef.baseColor);
         }
     }
 }

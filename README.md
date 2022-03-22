@@ -10,6 +10,10 @@ ThatWasMine prompts in the chat when an item drops with the Artifact of Sacrific
 
 ## Changelog
 
+**1.1.4**
+
+* Fixed drop prompt with Artifact of Command on
+
 **1.1.3**
 
 * Misc debug changes behind the scenes, `Debug` is now config toggleable, default: false
